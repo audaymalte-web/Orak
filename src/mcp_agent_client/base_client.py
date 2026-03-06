@@ -64,6 +64,7 @@ class MCPAgentClient:
         server_params = StdioServerParameters(
             command=current_command,
             args=current_args,
+            env=dict(os.environ),
             stderr=sys.stderr
         )
         
@@ -258,7 +259,7 @@ class MCPAgentClient:
         """Clean up all server connections"""
         self.sessions.clear()
         try:
-            await asyncio.wait_for(self.exit_stack.aclose(), timeout=5)
-        except asyncio.TimeoutError:
-            print("[DEBUG] aclose() timed out — remaining callbacks in exit stack:")
+            await self.exit_stack.aclose()
+        except (RuntimeError, asyncio.CancelledError) as e:
+            logger.warning(f"Suppressed error during MCP session cleanup: {e}")
         print("Clean up resources and close all sessions.")

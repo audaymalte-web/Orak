@@ -450,7 +450,14 @@ class LocalBase:
                 self.tok = AutoTokenizer.from_pretrained(base_model)
                 break
         if not is_finetune:
-            self.tok = AutoTokenizer.from_pretrained(self.model)
+            if self.model.startswith("slurm_vllm_"):
+                nano_4b_tokenizer_path = os.path.join(
+                    os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, os.pardir,
+                    "nano_4b_tokenizer",
+                )
+                self.tok = AutoTokenizer.from_pretrained(nano_4b_tokenizer_path)
+            else:
+                self.tok = AutoTokenizer.from_pretrained(self.model)
 
         if self.model.startswith("meta-llama/Llama-3.2"):
             self.tok.chat_template = llama_chat_template
