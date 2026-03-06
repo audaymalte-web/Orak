@@ -105,34 +105,37 @@ async def main():
     llm_agent = BaseAgent(config.agent)
     runner.set_agent(llm_agent)
 
-    # play with game and agent servers
-    score, step = await runner.mcp_play(config.game_server, config.agent_server, config.env.log_path, config)
+    try:
+        # play with game and agent servers
+        score, step = await runner.mcp_play(config.game_server, config.agent_server, config.env.log_path, config)
 
-    # save result
-    out_path = f"{config.env.log_path}/final_score.json"
-    result = {
-        "game": config.env_name,
-        "llm": config.agent.llm_name,
-        "agent_type": config.agent.agent_type,
-        "task": config.env.task,
-        "score": score,
-        "final_step": step,
-        "game_server": config.game_server,
-        "agent_server": config.agent_server,
-        "input_modality": config.env.input_modality,
-    }
-    with open(out_path, 'w', encoding='utf-8') as f:
-        json.dump(result, f, ensure_ascii=False, indent=4)
+        # save result
+        out_path = f"{config.env.log_path}/final_score.json"
+        result = {
+            "game": config.env_name,
+            "llm": config.agent.llm_name,
+            "agent_type": config.agent.agent_type,
+            "task": config.env.task,
+            "score": score,
+            "final_step": step,
+            "game_server": config.game_server,
+            "agent_server": config.agent_server,
+            "input_modality": config.env.input_modality,
+        }
+        with open(out_path, 'w', encoding='utf-8') as f:
+            json.dump(result, f, ensure_ascii=False, indent=4)
 
-    logger.info(f"Game: {config.env_name}")
-    logger.info(f"LLM: {config.agent.llm_name}")
-    logger.info(f"Agent: {config.agent.agent_type}")
-    logger.info(f"Task: {config.env.task}")
-    logger.info(f"Score: {score}")
-    logger.info(f"Step: {step}")
-    logger.info(f"Game Server: {config.game_server}")
-    logger.info(f"Agent Server: {config.agent_server}")
-    logger.info(f"Input Modality: {config.env.input_modality}")
+        logger.info(f"Game: {config.env_name}")
+        logger.info(f"LLM: {config.agent.llm_name}")
+        logger.info(f"Agent: {config.agent.agent_type}")
+        logger.info(f"Task: {config.env.task}")
+        logger.info(f"Score: {score}")
+        logger.info(f"Step: {step}")
+        logger.info(f"Game Server: {config.game_server}")
+        logger.info(f"Agent Server: {config.agent_server}")
+        logger.info(f"Input Modality: {config.env.input_modality}")
+    finally:
+        await client.cleanup()
 
 
 if __name__ == "__main__":

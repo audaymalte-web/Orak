@@ -145,5 +145,4 @@ class BaseRunner(Configurable):
             if done:
                 break
 
-        await self.client.cleanup()
         return score, i+1

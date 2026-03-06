@@ -491,12 +491,13 @@ class LocalBase:
     ) -> Stream[OpenAICompletion] | None:
         self.manage_length(messages)
 
-        # turn messages to prompt
+        enable_thinking = False
         prompt = chat_messages_to_prompt(
             self.tok,
             messages,
             tokenize=False,
             add_generation_prompt=True,
+            enable_thinking=enable_thinking,
         )
 
         response = completion_request(
@@ -575,12 +576,13 @@ class LocalBase:
                 )
             messages = new_messages
 
-        # turn messages to prompt
+        enable_thinking = False
         prompt = chat_messages_to_prompt(
             self.tok,
             messages,
             tokenize=False,
             add_generation_prompt=True,
+            enable_thinking=enable_thinking,
         )
 
         desired_output_length = min(

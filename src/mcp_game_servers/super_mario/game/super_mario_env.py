@@ -119,8 +119,8 @@ class SuperMarioObs(Obs):
                 #print(f"Object '{object_name}' found at location: {loc}")
                 found_objects[object_key].append(loc)
 
-        print("self.time: ", self.time)
-        print("found_objects: ", found_objects)
+        print("self.time: ", self.time, file=sys.stderr)
+        print("found_objects: ", found_objects, file=sys.stderr)
         return found_objects
 
     def to_text(self):
@@ -293,9 +293,9 @@ class SuperMarioEnv(BaseEnv):
             jump_level = text.split("Jump Level: ")[1].strip()
             if jump_level in ['0', '1', '2', '3', '4', '5', '6']:
                 self.jump_level = int(jump_level)
-            print("jump_level: ", jump_level)
+            print("jump_level: ", jump_level, file=sys.stderr)
         else:
-            print("***No 'Jump Level: ' in action_text!!!")
+            print("***No 'Jump Level: ' in action_text!!!", file=sys.stderr)
             
         return SuperMarioAction(values={"n_jumps": self.jump_level})
 

@@ -12,6 +12,7 @@ def chat_messages_to_prompt(
     return_dict=False,
     add_generation_prompt=True,
     max_length=None,
+    enable_thinking=False,
 ):
     for message in chat_messages:
         if message["role"] == "user" and isinstance(message["content"], list):
@@ -31,13 +32,18 @@ def chat_messages_to_prompt(
                 continue_final_message = True
                 add_generation_prompt = False
 
-        return tokenizer.apply_chat_template(
-            chat_messages,
+        template_kwargs = dict(
             tokenize=tokenize,
             return_dict=return_dict,
             max_length=max_length,
             add_generation_prompt=add_generation_prompt,
             continue_final_message=continue_final_message,
+        )
+        if enable_thinking:
+            template_kwargs["enable_thinking"] = True
+        return tokenizer.apply_chat_template(
+            chat_messages,
+            **template_kwargs,
         )
     else:
         text_prompt = ""

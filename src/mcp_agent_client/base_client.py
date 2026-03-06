@@ -262,4 +262,11 @@ class MCPAgentClient:
             await asyncio.wait_for(self.exit_stack.aclose(), timeout=5)
         except asyncio.TimeoutError:
             print("[DEBUG] aclose() timed out — remaining callbacks in exit stack:")
+        except RuntimeError as e:
+            if "cancel scope" in str(e):
+                logger.warning(f"Ignoring anyio cancel scope error during cleanup: {e}")
+            else:
+                raise
+        except BaseException as e:
+            logger.warning(f"Error during MCP client cleanup: {type(e).__name__}: {e}")
         print("Clean up resources and close all sessions.")
