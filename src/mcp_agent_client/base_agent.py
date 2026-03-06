@@ -47,7 +47,7 @@ class BaseAgent(Configurable):
     class Config:
         llm_name: str
         temperature: float = 0.0
-        top_p: float = None
+        top_p: Optional[float] = None
         repetition_penalty: float = 0.0
         api_key: str = ""
         api_base_url: str = ""
@@ -206,7 +206,7 @@ class BaselineAgent(BaseAgent):
     class Config:
         llm_name: str
         temperature: float = 0.0
-        top_p: float = None
+        top_p: Optional[float] = None
         repetition_penalty: float = 0.0
         api_key: str = ""
         api_base_url: str = ""
