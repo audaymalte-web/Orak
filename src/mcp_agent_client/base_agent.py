@@ -47,6 +47,7 @@ class BaseAgent(Configurable):
     class Config:
         llm_name: str
         temperature: float = 0.0
+        top_p: float = None
         repetition_penalty: float = 0.0
         api_key: str = ""
         api_base_url: str = ""
@@ -72,6 +73,7 @@ class BaseAgent(Configurable):
         # default arguments
         self.orig_model = self.cfg.llm_name
         self.temperature = self.cfg.temperature
+        self.top_p = self.cfg.top_p
         self.repetition_penalty = self.cfg.repetition_penalty
         self.api_key = self.cfg.api_key
         self.api_base_url = self.cfg.api_base_url
@@ -90,6 +92,7 @@ class BaseAgent(Configurable):
         loaded_model = load_model(
             self.orig_model,
             temperature=self.temperature,
+            top_p=self.top_p,
             repetition_penalty=self.repetition_penalty,
             api_key=self.api_key,
             api_base_url=self.api_base_url
@@ -180,10 +183,13 @@ class BaseAgent(Configurable):
     def update_parameters(
         self,
         temperature: float | None = None,
+        top_p: float | None = None,
         repetition_penalty: float | None = None,
     ) -> None:
         if temperature is not None:
             self.temperature = temperature
+        if top_p is not None:
+            self.top_p = top_p
         if repetition_penalty is not None:
             self.repetition_penalty = repetition_penalty
         self._setup_model()
@@ -200,6 +206,7 @@ class BaselineAgent(BaseAgent):
     class Config:
         llm_name: str
         temperature: float = 0.0
+        top_p: float = None
         repetition_penalty: float = 0.0
         api_key: str = ""
         api_base_url: str = ""

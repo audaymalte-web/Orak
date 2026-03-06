@@ -41,6 +41,7 @@ logger = logging.getLogger(__name__)
 def load_model(
     model: str,
     temperature: float = 1.0,
+    top_p: float = None,
     repetition_penalty: float = 0,
     api_key: str = None,
     api_base_url: str = None,
@@ -125,6 +126,7 @@ def load_model(
             ctx_manager=ctx_manager,
             desired_output_length=output_budget,
             temperature=temperature,
+            top_p=top_p,
             repetition_penalty=repetition_penalty,
             api_key=api_key,
             api_base_url=api_base_url,
@@ -420,6 +422,7 @@ class LocalBase:
         ctx_manager: MoneyManager | None = None,
         desired_output_length: int = 1024,
         temperature: float = 1.0,
+        top_p: float = None,
         repetition_penalty: float = 1.0,
     ):
         self.model = model
@@ -437,6 +440,7 @@ class LocalBase:
         self.output_budget = 1024
         self.desired_output_length = desired_output_length
         self.temperature = temperature
+        self.top_p = top_p
         self.repetition_penalty = repetition_penalty
         
         finetune_base_model = [
@@ -504,6 +508,7 @@ class LocalBase:
             prompt,
             model=self.model if lora is None else lora,
             temperature=self.temperature,
+            top_p=self.top_p,
             client=self.client,
             **kwargs,
         )
